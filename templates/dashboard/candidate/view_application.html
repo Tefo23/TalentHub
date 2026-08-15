@@ -1,0 +1,128 @@
+{% extends "dashboard/base.html" %}
+
+{% block title %}Application for {{ job.title }} - TalentHub{% endblock %}
+{% block sidebar %}
+    {% include "dashboard/candidate/navigation.html" %}
+{% endblock %}
+{% block content %}
+<div class="container-fluid py-4">
+
+    <!-- Header / Back Link -->
+    <div class="mb-4">
+        <a href="{% url 'candidate_dashboard' %}" class="btn btn-outline-secondary btn-sm shadow-sm mb-2">
+            <i class="fa fa-arrow-left mr-1"></i> Back to Dashboard
+        </a>
+        <div class="d-sm-flex align-items-center justify-content-between">
+            <h1 class="h3 mb-0 text-gray-800">Application Details</h1>
+            <div>
+                <!-- Status Badge -->
+                {% if application.status == 'pending' or application.status == 'submitted' %}
+                    <span class="badge badge-warning p-2 h6 mb-0">Status: Pending</span>
+                {% elif application.status == 'reviewed' or application.status == 'accepted' %}
+                    <span class="badge badge-success p-2 h6 mb-0">Status: Reviewed</span>
+                {% elif application.status == 'rejected' %}
+                    <span class="badge badge-danger p-2 h6 mb-0">Status: Rejected</span>
+                {% else %}
+                    <span class="badge badge-info p-2 h6 mb-0">Status: {{ application.get_status_display|default:application.status }}</span>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+
+        <!-- Job Summary Column -->
+        <div class="col-lg-5 mb-4">
+            <div class="card shadow border-left-primary h-100">
+                <div class="card-header bg-white py-3">
+                    <h5 class="m-0 font-weight-bold text-primary">{{ job.title }}</h5>
+                    <p class="text-muted small mb-0 mt-1">
+                        <i class="fa fa-building-o mr-1"></i>{{ job.employer.company_name }}
+                    </p>
+                </div>
+                <div class="card-body">
+                    <div class="mb-3">
+                        <span class="badge badge-info p-2 mr-1">
+                            <i class="fa fa-briefcase mr-1"></i>{{ job.get_employment_type_display|default:job.employment_type }}
+                        </span>
+                        {% if job.location %}
+                            <span class="badge badge-secondary p-2">
+                                <i class="fa fa-map-marker mr-1"></i>{{ job.location }}
+                            </span>
+                        {% endif %}
+                    </div>
+
+                    {% if job.salary_min or job.salary_max %}
+                        <div class="mb-3">
+                            <small class="text-muted d-block font-weight-bold">Salary Range</small>
+                            <span class="text-success font-weight-bold">
+                                {% if job.salary_min and job.salary_max %}
+                                    ${{ job.salary_min }} - ${{ job.salary_max }}
+                                {% elif job.salary_min %}
+                                    From ${{ job.salary_min }}
+                                {% else %}
+                                    Up to ${{ job.salary_max }}
+                                {% endif %}
+                            </span>
+                        </div>
+                    {% endif %}
+
+                    <hr>
+
+                    <div class="mb-3">
+                        <h6 class="font-weight-bold text-gray-800">Job Description</h6>
+                        <p class="small text-muted" style="white-space: pre-line;">{{ job.description }}</p>
+                    </div>
+
+                    {% if job.requirements %}
+                        <div>
+                            <h6 class="font-weight-bold text-gray-800">Requirements</h6>
+                            <p class="small text-muted" style="white-space: pre-line;">{{ job.requirements }}</p>
+                        </div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+
+        <!-- Submission Info & Cover Letter Column -->
+        <div class="col-lg-7 mb-4">
+            <div class="card shadow h-100">
+                <div class="card-header bg-white py-3 d-flex align-items-center justify-content-between">
+                    <h6 class="m-0 font-weight-bold text-primary">Submitted Information</h6>
+                    <small class="text-muted">
+                        Applied on {{ application.applied_at|date:"F d, Y \a\t g:i A" }}
+                    </small>
+                </div>
+                <div class="card-body">
+                    <div class="mb-4">
+                        <h6 class="font-weight-bold text-gray-800 mb-2">Cover Letter</h6>
+                        {% if application.cover_letter %}
+                            <div class="p-3 bg-light rounded border text-gray-800" style="white-space: pre-line; line-height: 1.6;">
+                                {{ application.cover_letter }}
+                            </div>
+                        {% else %}
+                            <p class="text-muted italic">No cover letter was submitted for this application.</p>
+                        {% endif %}
+                    </div>
+
+                    <!-- Actions -->
+                    <div class="pt-3 border-top d-flex justify-content-between align-items-center">
+                        <a href="{% url 'candidate_dashboard' %}" class="btn btn-secondary">
+                            Back to Dashboard
+                        </a>
+                        
+                        <form method="POST" action="{% url 'delete_application' application.id %}" onsubmit="return confirm('Are you sure you want to withdraw this application?');">
+                            {% csrf_token %}
+                            <button type="submit" class="btn btn-outline-danger block-action">
+                                <i class="fa fa-trash mr-1"></i> Withdraw Application
+                            </button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+</div>
+{% endblock %}

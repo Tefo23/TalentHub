@@ -1,0 +1,152 @@
+{% extends "dashboard/base.html" %}
+
+{% block title %}Review Application - {{ candidate.profile.user.get_full_name|default:candidate.profile.user.username }}{% endblock %}
+{% block sidebar %}
+
+    {% include "dashboard/employer/navigation.html" %}
+
+{% endblock %}
+{% block content %}
+<div class="container-fluid py-4">
+
+    <!-- Header Navigation -->
+    <div class="mb-4">
+        <a href="{% url 'employer_applications' %}" class="btn btn-outline-secondary btn-sm shadow-sm mb-2">
+            <i class="fa fa-arrow-left mr-1"></i> Back to Received Applications
+        </a>
+        <div class="d-sm-flex align-items-center justify-content-between">
+            <h1 class="h3 mb-0 text-gray-800">Application Review</h1>
+            <div>
+                {% if application.status == 'pending' %}
+                    <span class="badge badge-warning p-2 h6 mb-0">Status: Pending</span>
+                {% elif application.status == 'reviewed' %}
+                    <span class="badge badge-info p-2 h6 mb-0">Status: Reviewed</span>
+                {% elif application.status == 'accepted' %}
+                    <span class="badge badge-success p-2 h6 mb-0">Status: Accepted / Shortlisted</span>
+                {% elif application.status == 'rejected' %}
+                    <span class="badge badge-danger p-2 h6 mb-0">Status: Rejected</span>
+                {% else %}
+                    <span class="badge badge-secondary p-2 h6 mb-0">Status: {{ application.get_status_display }}</span>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+
+        <!-- Candidate Profile & Contact Card -->
+        <div class="col-lg-4 mb-4">
+            <div class="card shadow border-left-info mb-4">
+                <div class="card-body text-center p-4">
+                    <i class="fa fa-user-circle fa-5x text-gray-300 mb-3"></i>
+                    <h5 class="font-weight-bold text-dark mb-1">
+                        {{ candidate.profile.user.get_full_name }}
+                    </h5>
+                    <p class="text-primary font-weight-bold small mb-2">
+                        {{ candidate.headline|default:"Candidate" }}
+                    </p>
+                    <p class="text-muted small mb-3">
+                        <i class="fa fa-map-marker text-danger mr-1"></i>
+                        {{ candidate.location|default:"Location Not Specified" }}
+                    </p>
+
+                    <hr>
+
+                    <div class="text-left small mb-3">
+                        <p class="mb-2">
+                            <i class="fa fa-envelope text-muted mr-2"></i>
+                            <a href="mailto:{{ candidate.profile.user.email }}">{{ candidate.profile.user.email }}</a>
+                        </p>
+                        {% if candidate.portfolio %}
+                            <p class="mb-2">
+                                <i class="fa fa-globe text-muted mr-2"></i>
+                                <a href="{{ candidate.portfolio }}" target="_blank" rel="noopener noreferrer">Portfolio Link</a>
+                            </p>
+                        {% endif %}
+                        {% if candidate.cv %}
+                            <p class="mb-0">
+                                <i class="fa fa-file-pdf-o text-danger mr-2"></i>
+                                <a href="{{ candidate.cv.url }}" target="_blank" class="font-weight-bold">Download CV / Resume</a>
+                            </p>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+
+            <!-- Job Context Card -->
+            <div class="card shadow border-left-primary">
+                <div class="card-body">
+                    <h6 class="font-weight-bold text-primary mb-2">Job Opening</h6>
+                    <h5 class="font-weight-bold mb-1">{{ job.title }}</h5>
+                    <p class="small text-muted mb-2">
+                        Applied on: {{ application.applied_at|date:"F d, Y \a\t g:i A" }}
+                    </p>
+                    <a href="{% url 'post_job' %}" class="btn btn-sm btn-link pl-0">View Job Listing</a>
+                </div>
+            </div>
+        </div>
+
+        <!-- Application Content & Action Controls -->
+        <div class="col-lg-8 mb-4">
+
+            <!-- Status Update Action Bar -->
+            <div class="card shadow border-0 mb-4">
+                <div class="card-header bg-white py-3">
+                    <h6 class="m-0 font-weight-bold text-primary">Update Application Status</h6>
+                </div>
+                <div class="card-body p-4">
+                    <form method="POST" action="{% url 'review_candidate' application.id %}">
+                        {% csrf_token %}
+                        <div class="row align-items-center">
+                            <div class="col-md-7 mb-2 mb-md-0">
+                                <select name="status" class="form-control font-weight-bold">
+                                    <option value="pending" {% if application.status == 'pending' %}selected{% endif %}>Pending</option>
+                                    <option value="reviewed" {% if application.status == 'reviewed' %}selected{% endif %}>Mark as Reviewed</option>
+                                    <option value="accepted" {% if application.status == 'accepted' %}selected{% endif %}>Accept / Shortlist Candidate</option>
+                                    <option value="rejected" {% if application.status == 'rejected' %}selected{% endif %}>Reject Application</option>
+                                </select>
+                            </div>
+                            <div class="col-md-5">
+                                <button type="submit" class="btn btn-primary btn-block shadow-sm block-action">
+                                    <i class="fa fa-save mr-1"></i> Update Status
+                                </button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+
+            <!-- Cover Letter & Bio Card -->
+            <div class="card shadow border-0 mb-4">
+                <div class="card-header bg-white py-3">
+                    <h6 class="m-0 font-weight-bold text-primary">Submitted Cover Letter</h6>
+                </div>
+                <div class="card-body p-4">
+                    {% if application.cover_letter %}
+                        <div class="p-3 bg-light rounded border text-gray-800" style="white-space: pre-line; line-height: 1.6;">
+                            {{ application.cover_letter }}
+                        </div>
+                    {% else %}
+                        <p class="text-muted italic mb-0">No cover letter was submitted with this application.</p>
+                    {% endif %}
+                </div>
+            </div>
+
+            <!-- Candidate Bio Card -->
+            {% if candidate.bio %}
+                <div class="card shadow border-0">
+                    <div class="card-header bg-white py-3">
+                        <h6 class="m-0 font-weight-bold text-primary">Candidate Overview / Bio</h6>
+                    </div>
+                    <div class="card-body p-4">
+                        <p class="text-gray-800 mb-0" style="white-space: pre-line;">{{ candidate.bio }}</p>
+                    </div>
+                </div>
+            {% endif %}
+
+        </div>
+
+    </div>
+
+</div>
+{% endblock %}

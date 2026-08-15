@@ -1,0 +1,118 @@
+{% extends "base.html" %}
+
+{% block title %}Contact{% endblock %}
+
+{% block content %}
+{% load static %}
+
+<!-- Header End -->
+        <div class="container-xxl py-5 bg-dark page-header mb-5">
+            <div class="container my-5 pt-5 pb-4">
+              
+                <nav aria-label="breadcrumb">
+                    <ol class="breadcrumb text-uppercase">
+                        <li class="breadcrumb-item"><a href="../">Home</a></li>
+                        <li class="breadcrumb-item text-white active" aria-current="page">Contact</li>
+                    </ol>
+                </nav>
+            </div>
+        </div>
+        <!-- Header End -->
+ <!-- Contact Start -->
+        <div class="container-xxl py-5">
+            <div class="container">
+                <h1 class="text-center mb-5 wow fadeInUp" data-wow-delay="0.1s">Contact For Any Query</h1>
+                <div class="row g-4">
+                    <div class="col-12">
+                        <div class="row gy-4">
+                            <div class="col-md-4 wow fadeIn" data-wow-delay="0.1s">
+                                <div class="d-flex align-items-center bg-light rounded p-4">
+                                    <div class="bg-white border rounded d-flex flex-shrink-0 align-items-center justify-content-center me-3" style="width: 45px; height: 45px;">
+                                        <i class="fa fa-map-marker-alt text-primary"></i>
+                                    </div>
+                                    <span> UCD, Professional Academy, Ireland</span>
+                                </div>
+                            </div>
+                            <div class="col-md-4 wow fadeIn" data-wow-delay="0.3s">
+                                <div class="d-flex align-items-center bg-light rounded p-4">
+                                    <div class="bg-white border rounded d-flex flex-shrink-0 align-items-center justify-content-center me-3" style="width: 45px; height: 45px;">
+                                        <i class="fa fa-envelope-open text-primary"></i>
+                                    </div>
+                                    <span> info@teetalent.com</span>
+                                </div>
+                            </div>
+                            <div class="col-md-4 wow fadeIn" data-wow-delay="0.5s">
+                                <div class="d-flex align-items-center bg-light rounded p-4">
+                                    <div class="bg-white border rounded d-flex flex-shrink-0 align-items-center justify-content-center me-3" style="width: 45px; height: 45px;">
+                                        <i class="fa fa-phone-alt text-primary"></i>
+                                    </div>
+                                    <span>+353 89 9000 78</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+					<div class="col-md-3">
+					<img src="{% static 'img/profile.jpeg' %}" class="img-fluid avatar-image">
+					  <div class="d-flex flex-column justify-content-center ms-3">
+							<p class="mb-0">Tefo Molemohi</p>
+							<p class="mb-0"><strong>HR & Office Manager</strong></p>
+						</div>
+					</div>
+
+                    <!-- Form Side -->
+        <div class="col-lg-9 mb-4">
+            <div class="card shadow-sm border-0 p-4">
+                <h4 class="font-weight-bold text-dark mb-2">Send Us a Message</h4>
+                <p class="text-muted small mb-4">Fill in the form below and our support team will respond within 24 hours.</p>
+
+                <form method="POST" action="{% url 'contact_us' %}">
+                    {% csrf_token %}
+
+                    <!-- Name -->
+                    <div class="form-group mb-3">
+                        <label for="{{ form.name.id_for_label }}" class="font-weight-bold text-dark small">Your Name</label>
+                        {{ form.name }}
+                        {% if form.name.errors %}
+                            <div class="text-danger small mt-1">{{ form.name.errors.0 }}</div>
+                        {% endif %}
+                    </div>
+
+                    <!-- Email -->
+                    <div class="form-group mb-3">
+                        <label for="{{ form.email.id_for_label }}" class="font-weight-bold text-dark small">Email Address</label>
+                        {{ form.email }}
+                        {% if form.email.errors %}
+                            <div class="text-danger small mt-1">{{ form.email.errors.0 }}</div>
+                        {% endif %}
+                    </div>
+
+                    <!-- Subject -->
+                    <div class="form-group mb-3">
+                        <label for="{{ form.subject.id_for_label }}" class="font-weight-bold text-dark small">Subject</label>
+                        {{ form.subject }}
+                        {% if form.subject.errors %}
+                            <div class="text-danger small mt-1">{{ form.subject.errors.0 }}</div>
+                        {% endif %}
+                    </div>
+
+                    <!-- Message -->
+                    <div class="form-group mb-4">
+                        <label for="{{ form.message.id_for_label }}" class="font-weight-bold text-dark small">Message</label>
+                        {{ form.message }}
+                        {% if form.message.errors %}
+                            <div class="text-danger small mt-1">{{ form.message.errors.0 }}</div>
+                        {% endif %}
+                    </div>
+
+                    <button type="submit" class="btn btn-primary btn-block py-2 shadow-sm block-action">
+                        <i class="fa fa-paper-plane mr-1"></i> Send Message
+                    </button>
+                </form>
+            </div>
+        </div>
+                </div>
+            </div>
+        </div>
+        <!-- Contact End -->
+
+{% endblock %}

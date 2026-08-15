@@ -1,0 +1,88 @@
+{% extends "base.html" %}
+
+{% block title %}Home{% endblock %}
+
+{% block content %}
+{% load static %}
+
+        <!-- Carousel Start -->
+        <div class="container-fluid p-0">
+            <div class="owl-carousel header-carousel position-relative">
+                <div class="owl-carousel-item position-relative">
+                    <img class="img-fluid" src="{% static 'img/carousel-1.jpg' %}" alt="">
+                    <div class="position-absolute top-0 start-0 w-100 h-100 d-flex align-items-center" style="background: rgba(43, 57, 64, .5);">
+                        <div class="container">
+                            <div class="row justify-content-start">
+                                <div class="col-10 col-lg-8">
+                                    <h1 class="display-3 text-white animated slideInDown mb-4">Connecting Exceptional Talent with Industry Leaders</h1>
+                                    <p class="fs-5 fw-medium text-white mb-4 pb-2">Discover thousands of verified career opportunities or hire top-tier professionals equipped to drive your enterprise forward.</p>
+                                    <a href="/jobs/" class="btn btn-primary py-md-3 px-md-5 me-3 animated slideInLeft">Explore Job Listings</a>
+                                    <a href="{% url 'register' 'employer' %}" class="btn btn-secondary py-md-3 px-md-5 animated slideInRight">Post a Job Opening</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="owl-carousel-item position-relative">
+                    <img class="img-fluid" src="{% static 'img/carousel-2.jpg' %}" alt="">
+                    <div class="position-absolute top-0 start-0 w-100 h-100 d-flex align-items-center" style="background: rgba(43, 57, 64, .5);">
+                        <div class="container">
+                            <div class="row justify-content-start">
+                                <div class="col-10 col-lg-8">
+                                    <h1 class="display-3 text-white animated slideInDown mb-4">Accelerate Your Professional Journey</h1>
+                                    <p class="fs-5 fw-medium text-white mb-4 pb-2">Build an impactful profile, submit streamlined applications, and track your candidate status in real time with total transparency.</p>
+                                    <a href="{% url 'register' 'candidate' %}" class="btn btn-primary py-md-3 px-md-5 me-3 animated slideInLeft">Create Candidate Account</a>
+                                    <a href="/jobs/" class="btn btn-secondary py-md-3 px-md-5 animated slideInRight">Browse Categories</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- Carousel End -->
+
+
+        <!-- About Start -->
+        <div class="container-xxl py-5">
+            <div class="container">
+                <div class="row g-5 align-items-center">
+                    <div class="col-lg-6 wow fadeIn" data-wow-delay="0.1s">
+                        <div class="row g-0 about-bg rounded overflow-hidden">
+                            <div class="col-6 text-start">
+                                <img class="img-fluid w-100" src="{% static 'img/about-1.jpg' %}">
+                            </div>
+                            <div class="col-6 text-start">
+                                <img class="img-fluid" src="{% static 'img/about-2.jpg' %}" style="width: 85%; margin-top: 15%;">
+                            </div>
+                            <div class="col-6 text-end">
+                                <img class="img-fluid" src="{% static 'img/about-3.jpg' %}" style="width: 85%;">
+                            </div>
+                            <div class="col-6 text-end">
+                                <img class="img-fluid w-100" src="{% static 'img/about-4.jpg' %}">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-6 wow fadeIn" data-wow-delay="0.5s">
+                        <h1 class="mb-4">Redefining How the World Recruits</h1>
+                        <p class="mb-4">Finding the right job or hiring the ideal candidate should not be hindered by inefficient processes or lack of clarity. At TalentHub, we provide a unified ecosystem where recruitment is transparent, structured, and effective.</p>
+                        <p><i class="fa fa-check text-primary me-3"></i>Bridging Talent with Opportunity</p>
+                        <p><i class="fa fa-check text-primary me-3"></i>Verified Listings & Applicants</p>
+                        <p><i class="fa fa-check text-primary me-3"></i>Real-time Dashboard Tracking</p>
+                        <a class="btn btn-primary py-3 px-5 mt-3" href="/about/">Read More</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- About End -->
+<section class="bg-primary text-white py-5">
+    <div class="container text-center py-4">
+        <h1 class="display-4 font-weight-bold">Bridging Talent with Opportunity</h1>
+        <p class="lead max-w-700 mx-auto opacity-90">
+            TalentHub is a next-generation recruitment platform engineered to simplify hiring for businesses while empowering job seekers to build meaningful careers.
+        </p>
+    </div>
+</section>
+        
+
+     {% endblock %}

@@ -1,0 +1,108 @@
+{% extends "dashboard/base.html" %}
+{% load static %}
+
+{% block title %}Available Jobs - TalentHub{% endblock %}
+{% block sidebar %}
+    {% include "dashboard/candidate/navigation.html" %}
+{% endblock %}
+{% block content %}
+<div class="container-fluid py-4">
+
+    <!-- Header Section -->
+    <div class="d-sm-flex align-items-center justify-content-between mb-4">
+        <div>
+            <h1 class="h3 mb-0 text-gray-800">All Posted Jobs</h1>
+            <p class="text-muted small mb-0">Browsing all listings across the platform.</p>
+        </div>
+        {% if user.is_authenticated %}
+            <a href="{% url 'candidate_dashboard' %}" class="btn btn-outline-primary btn-sm shadow-sm">
+                <i class="fa fa-dashboard mr-1"></i> My Dashboard
+            </a>
+        {% endif %}
+    </div>
+
+    <!-- Job Cards Grid -->
+    <div class="row">
+        {% for job in jobs %}
+            <div class="col-lg-6 mb-4">
+                <div class="card shadow h-100 border-left-primary">
+                    <div class="card-body">
+                        <!-- Title, Company & Status -->
+                        <div class="d-flex justify-content-between align-items-start mb-2">
+                            <div>
+                                <h5 class="font-weight-bold text-primary mb-1">{{ job.title }}</h5>
+                                <p class="text-muted small mb-0">
+                                    <i class="fa fa-building-o mr-1"></i>{{ job.employer.company_name}}
+                                </p>
+                            </div>
+                            <div class="text-right">
+                                <!-- Employment Type Badge -->
+                                <span class="badge badge-info p-2 text-capitalize mb-1 d-inline-block">
+                                    {{ job.get_employment_type_display|default:job.employment_type }}
+                                </span>
+                                <br>
+                                <!-- Job Status Badge -->
+                                {% if job.status == 'open' %}
+                                    <span class="badge badge-success p-1">Open</span>
+                                {% elif job.status == 'draft' %}
+                                    <span class="badge badge-secondary p-1">Draft</span>
+                                {% elif job.status == 'closed' %}
+                                    <span class="badge badge-danger p-1">Closed</span>
+                                {% else %}
+                                    <span class="badge badge-light p-1">{{ job.status }}</span>
+                                {% endif %}
+                            </div>
+                        </div>
+
+                        <!-- Job Attributes -->
+                        <div class="my-3 small text-muted">
+                            {% if job.location %}
+                                <span class="mr-3"><i class="fa fa-map-marker text-danger mr-1"></i>{{ job.location }}</span>
+                            {% endif %}
+                            
+                            {% if job.salary_min or job.salary_max %}
+                                <span class="mr-3 text-success font-weight-bold">
+                                    <i class="fa fa-money mr-1"></i>
+                                    {% if job.salary_min and job.salary_max %}
+                                        ${{ job.salary_min }} - ${{ job.salary_max }}
+                                    {% elif job.salary_min %}
+                                        From ${{ job.salary_min }}
+                                    {% else %}
+                                        Up to ${{ job.salary_max }}
+                                    {% endif %}
+                                </span>
+                            {% endif %}
+
+                            {% if job.deadline %}
+                                <span><i class="fa fa-calendar text-warning mr-1"></i>{{ job.deadline|date:"M d, Y" }}</span>
+                            {% endif %}
+                        </div>
+
+                        <!-- Description Snippet -->
+                        <p class="card-text text-gray-700 small mb-3">
+                            {{ job.description|truncatewords:25 }}
+                        </p>
+
+                        <!-- Action Link -->
+                        <div class="d-flex justify-content-between align-items-center pt-2 border-top">
+                            <small class="text-muted">Posted {{ job.created_at|timesince }} ago</small>
+                            <a href="{% url 'apply_for_job' job.id %}" class="btn btn-primary btn-sm px-3 shadow-sm">
+                                Apply Now <i class="fa fa-arrow-right ml-1"></i>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        {% empty %}
+            <div class="col-12">
+                <div class="card shadow p-5 text-center text-muted">
+                    <i class="fa fa-briefcase fa-4x mb-3 text-gray-300"></i>
+                    <h4>No Jobs Posted Yet</h4>
+                    <p class="mb-0">There are currently no job listings in the system.</p>
+                </div>
+            </div>
+        {% endfor %}
+    </div>
+
+</div>
+{% endblock %}

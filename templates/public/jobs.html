@@ -1,0 +1,137 @@
+{% extends "base.html" %}
+
+{% block title %}Job List{% endblock %}
+
+{% block content %}
+<!-- Header End -->
+        <div class="container-xxl py-5 bg-dark page-header mb-5">
+            <div class="container my-5 pt-5 pb-4">
+              
+                <nav aria-label="breadcrumb">
+                    <ol class="breadcrumb text-uppercase">
+                        <li class="breadcrumb-item"><a href="../">Home</a></li>
+                        <li class="breadcrumb-item text-white active" aria-current="page">Job List</li>
+                    </ol>
+                </nav>
+            </div>
+        </div>
+        <!-- Header End -->
+  <!-- Jobs Start -->
+        
+ <!-- Search & Filter Bar -->
+	<div class="container-fluid bg-primary wow fadeIn" data-wow-delay="0.1s" style="padding: 35px;">
+            <div class="container">
+    <div class="card shadow-sm border-0 mb-4">
+        <div class="card-body">
+            <form method="GET" action="{% url 'public_job_list' %}" class="form-row align-items-center">
+                <!-- Search Input -->
+                <div class="row">
+				<div class="col-md-4 my-1">
+                    <div class="input-group">
+                       
+                        <input type="text" name="q" class="form-control" placeholder="Search title or keywords..." value="{{ request.GET.q|default:'' }}">
+                    </div>
+                </div>
+
+                <!-- Location Filter -->
+                <div class="col-md-3 my-1">
+                    <div class="input-group">
+                        
+                        <input type="text" name="location" class="form-control" placeholder="Location..." value="{{ request.GET.location|default:'' }}">
+                    </div>
+                </div>
+
+                <!-- Employment Type -->
+                <div class="col-md-3 my-1">
+                    <select name="employment_type" class="form-select">
+                        <option value="">All Employment Types</option>
+                        <option value="full_time" {% if request.GET.employment_type == 'full_time' %}selected{% endif %}>Full Time</option>
+                        <option value="part_time" {% if request.GET.employment_type == 'part_time' %}selected{% endif %}>Part Time</option>
+                        <option value="contract" {% if request.GET.employment_type == 'contract' %}selected{% endif %}>Contract</option>
+                        <option value="internship" {% if request.GET.employment_type == 'internship' %}selected{% endif %}>Internship</option>
+                        <option value="freelance" {% if request.GET.employment_type == 'freelance' %}selected{% endif %}>Freelance</option>
+                        <option value="remote" {% if request.GET.employment_type == 'remote' %}selected{% endif %}>Remote</option>
+                    </select>
+                </div>
+
+                <!-- Action Buttons -->
+                <div class="col-md-2 my-1 d-flex">
+                    <button type="submit" class="btn btn-primary btn-block mr-1">Filter</button>
+                    {% if request.GET.q or request.GET.location or request.GET.employment_type %}
+                        <a href="{% url 'public_job_list' %}" class="btn btn-secondary">
+                            <i class="fa fa-times"></i>
+                        </a>
+                    {% endif %}
+                </div>
+				</div>
+            </form>
+        </div>
+    </div> 
+	</div>
+    </div>
+
+<div class="container-xxl py-5">
+
+   
+
+    <!-- Active Listings Header -->
+    <div class="d-flex justify-content-between align-items-center mb-3">
+        <h5 class="font-weight-bold text-dark mb-0">Open Positions ({{ job_count }})</h5>
+    </div>
+
+    <!-- Job Cards -->
+    <div class="container">
+        {% for job in jobs %}
+		
+		
+		
+		
+		 <div class="job-item p-4 mb-4">
+                                <div class="row g-4">
+                                    <div class="col-sm-12 col-md-8 d-flex align-items-center">
+                                       
+                                        <div class="text-start ps-4">
+                                            <h5 class="mb-3">{{ job.title }}</h5>
+                                            <span class="text-truncate me-3"><i class="fa fa-map-marker-alt text-primary me-2"></i>{% if job.location %}
+											{{ job.location }}
+											{% endif %}
+											</span>
+                                            <span class="text-truncate me-3"><i class="far fa-clock text-primary me-2"></i>{{ job.get_employment_type_display|default:job.employment_type }}</span>
+											{% if job.salary_min or job.salary_max %}
+                                            <span class="text-truncate me-0"><i class="far fa-money-bill-alt text-primary me-2"></i>{% if job.salary_min and job.salary_max %}
+                                        ${{ job.salary_min }} - ${{ job.salary_max }}
+                                    {% elif job.salary_min %}
+                                        From ${{ job.salary_min }}
+                                    {% else %}
+                                        Up to ${{ job.salary_max }}
+                                    {% endif %}</span>
+											 {% endif %}
+                                        </div>
+                                    </div>
+                                    <div class="col-sm-12 col-md-4 d-flex flex-column align-items-start align-items-md-end justify-content-center">
+                                        <div class="d-flex mb-3">
+                                            <a class="btn btn-light btn-square me-3" href=""><i class="far fa-heart text-primary"></i></a>
+                                            <a class="btn btn-primary" href="/register/">Apply Now</a>
+                                        </div>
+                                        <small class="text-truncate"><i class="far fa-calendar-alt text-primary me-2"></i>Posted {{ job.created_at|timesince }} ago</small>
+                                    </div>
+                                </div>
+                            </div>
+		
+		
+		
+            
+        {% empty %}
+            <div class="col-12">
+                <div class="card border-0 shadow-sm p-5 text-center text-muted">
+                    <i class="fa fa-briefcase fa-3x mb-3 text-gray-300"></i>
+                    <h5>No Open Positions Found</h5>
+                    <p class="small mb-0">Check back later or adjust your filter choices.</p>
+                </div>
+            </div>
+        {% endfor %}
+    </div> 
+	</div>
+
+
+{% endblock %}

@@ -1,0 +1,25 @@
+{% extends "dashboard/base.html" %}
+
+{% block title %}Edit Job - {{ job.title }}{% endblock %}
+{% block sidebar %}
+    {% include "dashboard/employer/navigation.html" %}
+{% endblock %}
+{% block content %}
+<div class="container-fluid py-4">
+    <div class="card shadow-sm border-0 rounded-3">
+        <div class="card-header bg-white py-3 border-0">
+            <h4 class="card-title mb-0 fw-bold">Edit Job Posting</h4>
+        </div>
+        <div class="card-body p-4">
+            <form method="POST" action="{% url 'edit_job' job.id %}">
+                {% csrf_token %}
+                {{ form.as_p }}
+                <div class="mt-4">
+                    <button type="submit" class="btn btn-primary px-4">Save Changes</button>
+                    <a href="{% url 'employer_dashboard' %}" class="btn btn-secondary px-4 ms-2">Cancel</a>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}

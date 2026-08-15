@@ -1,0 +1,306 @@
+{% extends "dashboard/base.html" %}
+
+{% block title %}
+Company Profile
+{% endblock %}
+
+
+{% block sidebar %}
+
+    {% include "dashboard/employer/navigation.html" %}
+
+{% endblock %}
+
+
+{% block content %}
+<div class="container-fluid">
+      <!-- Breadcrumbs-->
+      <ol class="breadcrumb">
+        <li class="breadcrumb-item">
+          <a href="#">Company Profile</a>
+        </li>
+        <li class="breadcrumb-item active">Manage your company's public information.</li>
+      </ol>
+   </div>
+
+
+<div class="container-fluid">
+
+    <!-- Page Heading -->
+
+ 
+
+
+    <div class="row">
+
+        <!-- Company Profile Form -->
+
+        <div class="col-lg-8">
+
+            <div class="card mb-4">
+
+                <div class="card-header">
+
+                    <i class="fa fa-building"></i>
+
+                    Company Information
+
+                </div>
+
+
+                <div class="card-body">
+
+                    <form method="POST"
+                          enctype="multipart/form-data">
+
+                        {% csrf_token %}
+
+
+                        {% if form.non_field_errors %}
+
+                            <div class="alert alert-danger">
+
+                                {{ form.non_field_errors }}
+
+                            </div>
+
+                        {% endif %}
+
+
+                        <!-- Company Name -->
+
+                        <div class="form-group">
+
+                            <label for="{{ form.company_name.id_for_label }}">
+                                Company Name
+                            </label>
+
+                            {{ form.company_name }}
+
+                            {{ form.company_name.errors }}
+
+                        </div>
+
+
+                        <!-- Industry -->
+
+                        <div class="form-group">
+
+                            <label for="{{ form.industry.id_for_label }}">
+                                Industry
+                            </label>
+
+                            {{ form.industry }}
+
+                            {{ form.industry.errors }}
+
+                        </div>
+
+
+                        <div class="row">
+
+                            <!-- Website -->
+
+                            <div class="col-md-6">
+
+                                <div class="form-group">
+
+                                    <label for="{{ form.website.id_for_label }}">
+                                        Website
+                                    </label>
+
+                                    {{ form.website }}
+
+                                    {{ form.website.errors }}
+
+                                </div>
+
+                            </div>
+
+
+                            <!-- Location -->
+
+                            <div class="col-md-6">
+
+                                <div class="form-group">
+
+                                    <label for="{{ form.location.id_for_label }}">
+                                        Location
+                                    </label>
+
+                                    {{ form.location }}
+
+                                    {{ form.location.errors }}
+
+                                </div>
+
+                            </div>
+
+                        </div>
+
+
+                        <!-- Description -->
+
+                        <div class="form-group">
+
+                            <label for="{{ form.description.id_for_label }}">
+                                Company Description
+                            </label>
+
+                            {{ form.description }}
+
+                            {{ form.description.errors }}
+
+                        </div>
+
+
+                        <!-- Logo -->
+
+                        <div class="form-group">
+
+                            <label for="{{ form.company_logo.id_for_label }}">
+                                Company Logo
+                            </label>
+
+                            {{ form.company_logo }}
+
+                            {{ form.company_logo.errors }}
+
+                        </div>
+
+
+                        <!-- Save -->
+
+                        <button type="submit"
+                                class="btn btn-primary">
+
+                            <i class="fa fa-save"></i>
+
+                            Save Changes
+
+                        </button>
+
+                    </form>
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <!-- Company Preview -->
+
+        <div class="col-lg-4">
+
+            <div class="card">
+
+                <div class="card-header">
+
+                    <i class="fa fa-eye"></i>
+
+                    Company Preview
+
+                </div>
+
+
+                <div class="card-body text-center">
+
+
+                    {% if employer.company_logo %}
+
+                        <img
+                            src="{{ employer.company_logo.url }}"
+                            alt="{{ employer.company_name }}"
+                            class="img-fluid mb-3"
+                            style="max-height: 120px;"
+                        >
+
+                    {% else %}
+
+                        <div class="mb-3">
+
+                            <i class="fa fa-building fa-4x text-muted"></i>
+
+                        </div>
+
+                    {% endif %}
+
+
+                    <h4>
+
+                        {% if employer.company_name %}
+
+                            {{ employer.company_name }}
+
+                        {% else %}
+
+                            Your Company
+
+                        {% endif %}
+
+                    </h4>
+
+
+                    {% if employer.industry %}
+
+                        <p class="text-muted">
+
+                            {{ employer.industry }}
+
+                        </p>
+
+                    {% endif %}
+
+
+                    {% if employer.location %}
+
+                        <p>
+
+                            <i class="fa fa-map-marker"></i>
+
+                            {{ employer.location }}
+
+                        </p>
+
+                    {% endif %}
+
+
+                    {% if employer.website %}
+
+                        <a href="{{ employer.website }}"
+                           target="_blank"
+                           rel="noopener">
+
+                            <i class="fa fa-globe"></i>
+
+                            Visit Website
+
+                        </a>
+
+                    {% endif %}
+
+
+                    {% if employer.description %}
+
+                        <hr>
+
+                        <p class="text-left">
+
+                            {{ employer.description }}
+
+                        </p>
+
+                    {% endif %}
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+{% endblock %}

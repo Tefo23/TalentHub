@@ -1,0 +1,129 @@
+{% extends "dashboard/base.html" %}
+{% load static %}
+
+{% block title %}Post a Job - TalentHub{% endblock %}
+
+{% block sidebar %}
+    {% include "dashboard/employer/navigation.html" %}
+{% endblock %}
+
+{% block content %}
+
+<div class="container-fluid">
+      <!-- Breadcrumbs-->
+      <ol class="breadcrumb">
+        <li class="breadcrumb-item">
+          <a href="#">Post a New Job</a>
+        </li>
+        <li class="breadcrumb-item active">Fill in the details below to publish a new job opportunity.</li>
+      </ol>
+   </div>
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-lg-12">
+		
+		
+            <div class="card shadow-sm border-0 rounded-3">
+               
+                <div class="card-body p-5">
+
+                   <!-- Display Django Flash Messages -->
+{% if messages %}
+    <div class="container-fluid pt-3">
+        {% for message in messages %}
+            <div class="alert alert-{{ message.tags|default:'info' }} alert-dismissible fade show shadow-sm" role="alert">
+                {% if message.tags == 'success' %}
+                    <i class="fa fa-check-circle mr-2"></i>
+                {% elif message.tags == 'error' or message.tags == 'danger' %}
+                    <i class="fa fa-exclamation-triangle mr-2"></i>
+                {% elif message.tags == 'warning' %}
+                    <i class="fa fa-exclamation-circle mr-2"></i>
+                {% else %}
+                    <i class="fa fa-info-circle mr-2"></i>
+                {% endif %}
+                
+                {{ message }}
+
+                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+        {% endfor %}
+    </div>
+{% endif %}
+
+                  <form method="POST" action="{% url 'post_job' %}">
+    {% csrf_token %}
+
+    <div class="row ">
+        <!-- Manually rendering fields to guarantee display -->
+        <div class="col-12">
+            <label class="form-label fw-semibold">Job Title</label>
+            {{ form.title }}
+            {% for error in form.title.errors %}<div class="text-danger small">{{ error }}</div>{% endfor %}
+        </div>
+
+        <div class="col-md-6">
+            <label class="form-label fw-semibold">Location</label>
+            {{ form.location }}
+            {% for error in form.location.errors %}<div class="text-danger small">{{ error }}</div>{% endfor %}
+        </div>
+
+        <div class="col-md-6">
+            <label class="form-label fw-semibold">Employment Type</label>
+            {{ form.employment_type }}
+            {% for error in form.employment_type.errors %}<div class="text-danger small">{{ error }}</div>{% endfor %}
+        </div>
+
+        <div class="col-md-4">
+            <label class="form-label fw-semibold">Min Salary ($)</label>
+            {{ form.salary_min }}
+            {% for error in form.salary_min.errors %}<div class="text-danger small">{{ error }}</div>{% endfor %}
+        </div>
+
+        <div class="col-md-4">
+            <label class="form-label fw-semibold">Max Salary ($)</label>
+            {{ form.salary_max }}
+            {% for error in form.salary_max.errors %}<div class="text-danger small">{{ error }}</div>{% endfor %}
+        </div>
+
+        <div class="col-md-4">
+            <label class="form-label fw-semibold">Deadline</label>
+            {{ form.deadline }}
+            {% for error in form.deadline.errors %}<div class="text-danger small">{{ error }}</div>{% endfor %}
+        </div>
+
+        <div class="col-12">
+            <label class="form-label fw-semibold">Description</label>
+            {{ form.description }}
+            {% for error in form.description.errors %}<div class="text-danger small">{{ error }}</div>{% endfor %}
+        </div>
+
+        <div class="col-12">
+            <label class="form-label fw-semibold">Requirements</label>
+            {{ form.requirements }}
+            {% for error in form.requirements.errors %}<div class="text-danger small">{{ error }}</div>{% endfor %}
+        </div>
+		<div class="col-md-4 form-group mb-3">
+    <label for="{{ form.status.id_for_label }}" class="font-weight-bold">Job Status *</label>
+    {{ form.status }}
+    {% if form.status.errors %}
+        <div class="invalid-feedback d-block text-danger small mt-1">
+            {{ form.status.errors.0 }}
+        </div>
+    {% endif %}
+</div>
+
+        <div class="col-12 mt-4 text-end">
+            <a href="{% url 'employer_dashboard' %}" class="btn btn-outline-secondary me-2">Cancel</a>
+            <button type="submit" class="btn btn-primary px-4 py-2">Publish Job</button>
+        </div>
+    </div>
+</form>
+
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,163 @@
+{% extends "dashboard/base.html" %}
+{% load static %}
+
+{% block title %}Apply for {{ job.title }} - TalentHub{% endblock %}
+
+{% block sidebar %}
+    {% include "dashboard/candidate/navigation.html" %}
+{% endblock %}
+
+{% block content %}
+<div class="container-fluid py-4">
+
+    <!-- Header / Back Link -->
+    <div class="mb-4">
+        <a href="{% url 'job_list' %}" class="btn btn-outline-secondary btn-sm shadow-sm mb-2">
+            <i class="fa fa-arrow-left mr-1"></i> Back to Jobs
+        </a>
+        <h1 class="h3 mb-0 text-gray-800">Submit Application</h1>
+    </div>
+
+    <div class="row">
+{% if messages %}
+    <div class="container-fluid pt-3">
+        {% for message in messages %}
+            <div class="alert alert-{{ message.tags|default:'info' }} alert-dismissible fade show shadow-sm" role="alert">
+                {% if message.tags == 'success' %}
+                    <i class="fa fa-check-circle mr-2"></i>
+                {% elif message.tags == 'error' or message.tags == 'danger' %}
+                    <i class="fa fa-exclamation-triangle mr-2"></i>
+                {% elif message.tags == 'warning' %}
+                    <i class="fa fa-exclamation-circle mr-2"></i>
+                {% else %}
+                    <i class="fa fa-info-circle mr-2"></i>
+                {% endif %}
+                
+                {{ message }}
+
+                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+        {% endfor %}
+    </div>
+{% endif %}
+        <!-- Job Details Card (Left Column) -->
+        <div class="col-lg-5 mb-4">
+            <div class="card shadow border-left-primary h-100">
+                <div class="card-header py-3 bg-white border-0">
+                    <h5 class="m-0 font-weight-bold text-primary">{{ job.title }}</h5>
+                    <p class="text-muted small mb-0 mt-1">
+                        <i class="fa fa-building-o mr-1"></i>{{ job.employer.company_name}}
+                    </p>
+                </div>
+                <div class="card-body">
+                    <!-- Key Job Details Badges -->
+                    <div class="mb-3">
+                        <span class="badge badge-info p-2 mr-1">
+                            <i class="fa fa-briefcase mr-1"></i>{{ job.get_employment_type_display|default:job.employment_type }}
+                        </span>
+                        {% if job.location %}
+                            <span class="badge badge-secondary p-2">
+                                <i class="fa fa-map-marker mr-1"></i>{{ job.location }}
+                            </span>
+                        {% endif %}
+                    </div>
+
+                    <!-- Salary Range -->
+                    {% if job.salary_min or job.salary_max %}
+                        <div class="mb-3">
+                            <small class="text-muted d-block font-weight-bold">Salary Range</small>
+                            <span class="text-success font-weight-bold">
+                                {% if job.salary_min and job.salary_max %}
+                                    ${{ job.salary_min }} - ${{ job.salary_max }}
+                                {% elif job.salary_min %}
+                                    From ${{ job.salary_min }}
+                                {% else %}
+                                    Up to ${{ job.salary_max }}
+                                {% endif %}
+                            </span>
+                        </div>
+                    {% endif %}
+
+                    <!-- Application Deadline -->
+                    {% if job.deadline %}
+                        <div class="mb-3">
+                            <small class="text-muted d-block font-weight-bold">Deadline</small>
+                            <span><i class="fa fa-calendar text-danger mr-1"></i>{{ job.deadline|date:"M d, Y" }}</span>
+                        </div>
+                    {% endif %}
+
+                    <hr>
+
+                    <!-- Job Description Summary -->
+                    <div class="mb-3">
+                        <h6 class="font-weight-bold text-gray-800">Job Description</h6>
+                        <p class="small text-muted" style="white-space: pre-line;">{{ job.description|truncatewords:60 }}</p>
+                    </div>
+
+                    {% if job.requirements %}
+                        <div>
+                            <h6 class="font-weight-bold text-gray-800">Requirements</h6>
+                            <p class="small text-muted" style="white-space: pre-line;">{{ job.requirements|truncatewords:40 }}</p>
+                        </div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+
+        <!-- Application Form (Right Column) -->
+        <div class="col-lg-7 mb-4">
+            <div class="card shadow">
+                <div class="card-header py-3 bg-white">
+                    <h6 class="m-0 font-weight-bold text-primary">Your Application Details</h6>
+                </div>
+                <div class="card-body">
+                    
+                    <form method="POST" action="{% url 'apply_for_job' job.id %}">
+                        {% csrf_token %}
+
+                        <!-- Display non-field errors if any -->
+                        {% if form.non_field_errors %}
+                            <div class="alert alert-danger">
+                                {% for error in form.non_field_errors %}
+                                    <p class="mb-0">{{ error }}</p>
+                                {% endfor %}
+                            </div>
+                        {% endif %}
+
+                        <!-- Cover Letter Field -->
+                        <div class="form-group mb-4">
+                            <label for="{{ form.cover_letter.id_for_label }}" class="font-weight-bold text-gray-800">
+                                Cover Letter
+                            </label>
+                            {{ form.cover_letter }}
+                            {% if form.cover_letter.errors %}
+                                <div class="text-danger small mt-1">
+                                    {{ form.cover_letter.errors.0 }}
+                                </div>
+                            {% endif %}
+                            <small class="form-text text-muted">
+                                Tell the employer why you are a great fit for this position and highlight relevant achievements.
+                            </small>
+                        </div>
+
+                        <!-- Action Buttons -->
+                        <div class="d-flex align-items-center justify-content-between pt-3 border-top">
+                            <a href="{% url 'job_list' %}" class="btn btn-secondary">
+                                Cancel
+                            </a>
+                            <button type="submit" class="btn btn-primary px-4 shadow-sm">
+                                <i class="fa fa-paper-plane mr-1"></i> Submit Application
+                            </button>
+                        </div>
+                    </form>
+
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+</div>
+{% endblock %}

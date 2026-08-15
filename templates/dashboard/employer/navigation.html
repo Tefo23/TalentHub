@@ -1,0 +1,107 @@
+<ul class="navbar-nav navbar-sidenav"
+            id="exampleAccordion">
+
+
+            <!-- Dashboard -->
+
+            <li class="nav-item"
+                data-toggle="tooltip"
+                data-placement="right"
+                title="Dashboard">
+
+                <a class="nav-link"
+                   href="{% url 'employer_dashboard' %}">
+
+                    <i class="fa fa-fw fa-dashboard"></i>
+
+                    <span class="nav-link-text">
+                        Dashboard
+                    </span>
+
+                </a>
+
+            </li>
+
+
+            <!-- Profile -->
+
+            <li class="nav-item"
+                data-toggle="tooltip"
+                data-placement="right"
+                title="Company Profile">
+
+               <a class="nav-link"
+       href="{% url 'employer_company_profile' %}">
+
+        <i class="fa fa-fw fa-building"></i>
+
+        <span class="nav-link-text">
+            Company Profile
+        </span>
+
+    </a>
+
+            </li>
+
+<li class="nav-item"
+                data-toggle="tooltip"
+                data-placement="right"
+                title="Post a Job">
+
+               <a class="nav-link"
+   href="{% url 'post_job' %}">
+
+    <i class="fa fa-fw fa-plus"></i>
+
+    <span class="nav-link-text">
+        Post a Job
+    </span>
+
+</a>
+
+            </li>
+
+
+          
+            <!-- Jobs -->
+
+           
+
+            <!-- Applications -->
+
+            <li class="nav-item"
+                data-toggle="tooltip"
+                data-placement="right"
+                title="Applications">
+
+               <a class="nav-link" href="{% url 'employer_applications' %}">
+        <i class="fa fa-file-text"></i>  <span class="nav-link-text">Received Applications</span>
+    </a>
+
+            </li>
+ 
+
+
+            <!-- Messages -->
+
+            <!-- Settings -->
+
+            <li class="nav-item"
+                data-toggle="tooltip"
+                data-placement="right"
+                title="Settings">
+
+                <a class="nav-link"
+                   href="#">
+
+                    <i class="fa fa-fw fa-cog"></i>
+
+                    <span class="nav-link-text">
+                        Settings
+                    </span>
+
+                </a>
+
+            </li>
+
+        </ul>

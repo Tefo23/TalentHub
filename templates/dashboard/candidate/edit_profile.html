@@ -1,0 +1,162 @@
+{% extends "dashboard/base.html" %}
+
+{% block title %}Edit Profile - TalentHub{% endblock %}
+{% block sidebar %}
+    {% include "dashboard/candidate/navigation.html" %}
+{% endblock %}
+{% block content %}
+<div class="container-fluid py-4">
+
+    <!-- Page Header -->
+    <div class="d-sm-flex align-items-center justify-content-between mb-4">
+        <h1 class="h3 mb-0 text-gray-800">Edit Candidate Profile</h1>
+        <a href="{% url 'candidate_dashboard' %}" class="btn btn-outline-secondary btn-sm shadow-sm">
+            <i class="fa fa-arrow-left mr-1"></i> Back to Dashboard
+        </a>
+    </div>
+   {% if messages %}
+    <div class="container-fluid pt-3">
+        {% for message in messages %}
+            <div class="alert alert-{{ message.tags|default:'info' }} alert-dismissible fade show shadow-sm" role="alert">
+                {% if message.tags == 'success' %}
+                    <i class="fa fa-check-circle mr-2"></i>
+                {% elif message.tags == 'error' or message.tags == 'danger' %}
+                    <i class="fa fa-exclamation-triangle mr-2"></i>
+                {% elif message.tags == 'warning' %}
+                    <i class="fa fa-exclamation-circle mr-2"></i>
+                {% else %}
+                    <i class="fa fa-info-circle mr-2"></i>
+                {% endif %}
+                
+                {{ message }}
+
+                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+        {% endfor %}
+    </div>
+{% endif %}
+    <div class="row">
+        <!-- Profile Card -->
+        <div class="col-lg-8">
+            <div class="card shadow border-0 mb-4">
+                <div class="card-header bg-white py-3">
+                    <h6 class="m-0 font-weight-bold text-primary">Personal Details & Info</h6>
+                </div>
+                <div class="card-body p-4">
+
+                    <form method="POST" action="{% url 'edit_candidate_profile' %}">
+                        {% csrf_token %}
+
+                        <!-- Headline -->
+                        <div class="form-group mb-3">
+                            <label for="{{ form.headline.id_for_label }}" class="font-weight-bold text-gray-800">
+                                Professional Headline
+                            </label>
+                            {{ form.headline }}
+                            <small class="form-text text-muted">
+                                A short summary (e.g., "Full-Stack Django Developer | Python & React").
+                            </small>
+                            {% if form.headline.errors %}
+                                <div class="invalid-feedback d-block text-danger small mt-1">
+                                    {{ form.headline.errors.0 }}
+                                </div>
+                            {% endif %}
+                        </div>
+
+                        <!-- Location -->
+                        <div class="form-group mb-3">
+                            <label for="{{ form.location.id_for_label }}" class="font-weight-bold text-gray-800">
+                                Location
+                            </label>
+                            {{ form.location }}
+                            {% if form.location.errors %}
+                                <div class="invalid-feedback d-block text-danger small mt-1">
+                                    {{ form.location.errors.0 }}
+                                </div>
+                            {% endif %}
+                        </div>
+
+                        <!-- Portfolio Link -->
+                        <div class="form-group mb-3">
+                            <label for="{{ form.portfolio.id_for_label }}" class="font-weight-bold text-gray-800">
+                                Portfolio / Personal Website URL
+                            </label>
+                            <div class="input-group">
+                                <div class="input-group-prepend">
+                                    <span class="input-group-text bg-white"><i class="fa fa-globe text-muted"></i></span>
+                                </div>
+                                {{ form.portfolio }}
+                            </div>
+                            {% if form.portfolio.errors %}
+                                <div class="invalid-feedback d-block text-danger small mt-1">
+                                    {{ form.portfolio.errors.0 }}
+                                </div>
+                            {% endif %}
+                        </div>
+
+                        <!-- Bio -->
+                        <div class="form-group mb-4">
+                            <label for="{{ form.bio.id_for_label }}" class="font-weight-bold text-gray-800">
+                                Bio / Summary
+                            </label>
+                            {{ form.bio }}
+                            {% if form.bio.errors %}
+                                <div class="invalid-feedback d-block text-danger small mt-1">
+                                    {{ form.bio.errors.0 }}
+                                </div>
+                            {% endif %}
+                        </div>
+
+                        <!-- Action Buttons -->
+                        <div class="pt-3 border-top d-flex align-items-center justify-content-between">
+                            <a href="{% url 'candidate_dashboard' %}" class="btn btn-secondary px-4">
+                                Cancel
+                            </a>
+                            <button type="submit" class="btn btn-primary px-4 shadow-sm">
+                                <i class="fa fa-save mr-1"></i> Save Changes
+                            </button>
+                        </div>
+                    </form>
+
+                </div>
+            </div>
+        </div>
+
+        <!-- Sidebar Summary Box -->
+        <div class="col-lg-4">
+            <div class="card shadow border-left-info mb-4">
+                <div class="card-header bg-white py-3">
+                    <h6 class="m-0 font-weight-bold text-info">Profile Preview</h6>
+                </div>
+                <div class="card-body">
+                    <div class="text-center mb-3">
+                        <i class="fa fa-user-circle fa-4x text-gray-300 mb-2"></i>
+                        <h5 class="font-weight-bold mb-0">{{ request.user.username }}</h5>
+                        <p class="text-muted small mb-1">{{ candidate.headline|default:"No headline set" }}</p>
+                    </div>
+                    <hr>
+                    <div class="small text-muted">
+                        <p class="mb-2">
+                            <i class="fa fa-map-marker text-danger mr-2"></i>
+                            {{ candidate.location|default:"No location set" }}
+                        </p>
+                        <p class="mb-0">
+                            <i class="fa fa-globe text-primary mr-2"></i>
+                            {% if candidate.portfolio %}
+                                <a href="{{ candidate.portfolio }}" target="_blank" rel="noopener noreferrer">
+                                    {{ candidate.portfolio|truncatechars:30 }}
+                                </a>
+                            {% else %}
+                                No portfolio link
+                            {% endif %}
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>
+{% endblock %}

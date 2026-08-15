@@ -1,0 +1,25 @@
+{% extends "dashboard/base.html" %}
+
+{% block title %}Delete Job - {{ job.title }}{% endblock %}
+{% block sidebar %}
+    {% include "dashboard/employer/navigation.html" %}
+{% endblock %}
+{% block content %}
+<div class="container py-5">
+    <div class="card border-danger shadow-sm max-w-lg mx-auto">
+        <div class="card-header bg-danger text-white py-3">
+            <h5 class="card-title mb-0">Confirm Deletion</h5>
+        </div>
+        <div class="card-body p-4 text-center">
+            <p class="fs-5 mb-3">Are you sure you want to delete <strong>"{{ job.title }}"</strong>?</p>
+            <p class="text-muted small">This action cannot be undone.</p>
+            
+            <form method="POST" action="{% url 'delete_job' job.id %}" class="mt-4">
+                {% csrf_token %}
+                <button type="submit" class="btn btn-danger px-4">Yes, Delete Job</button>
+                <a href="{% url 'employer_dashboard' %}" class="btn btn-secondary px-4 ms-2">Cancel</a>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}
