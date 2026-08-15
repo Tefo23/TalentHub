@@ -108,7 +108,6 @@ python manage.py collectstatic --no-input
 7. Start the development server
 python manage.py runserver
 Open:
-
 http://127.0.0.1:8000/
 Production Deployment on Render
 The project includes a build.sh file and render.yaml deployment configuration.
