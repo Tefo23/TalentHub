@@ -169,7 +169,7 @@ python manage.py collectstatic --no-input
 python manage.py runserver
 The production deployment was verified by accessing:
 
-https://talenthub-as9a.onrender.com
+https://talenthub-as9a.onrender.com/
 
 The live application should be checked after every production deployment for:
 
